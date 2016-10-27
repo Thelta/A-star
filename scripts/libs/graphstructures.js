@@ -34,74 +34,62 @@ class Edge
         this.source = source;
         this.target = target;
         this.weight = weight;
+        this.marked = false;
     }
 }
-
-function KruskalAlgorithm(sortedEdges)
-{
-    var newEdges = new Array();
-    var nodes = new Array();
-
-    for(i = 0; i < sortedEdges.length; i++)
-    {
-        var edge = sortedEdges[i];
-        if(!(nodes.includes(edge.source) && nodes.includes(edge.target)))
-        {
-            newEdges.push(edge);
-            if(!nodes.includes(edge.source))
-            {
-                nodes.push(edge.source);
-            }
-            if(!nodes.includes(edge.target))
-            {
-                nodes.push(edge.target);
-            }
-        }
-    }
-
-    return newEdges;
-}
-
 
 function primsAlgorithm(startPoint, nodeEdgeMap)
 {
     var nextNode = startPoint;
-    var processedNodes = [nextNode];
+    var processedNodes = [startPoint];
+
     var edgeQueue = new buckets.PriorityQueue(function(a,b)
     {
-        return -a.weight + b.weight;
+        return b.edge.weight - a.edge.weight;
     });
+
     for(i = 0; i < this.allNeighborsCount[nextNode] + 1; i++)
     {
         if(i == nextNode)
         {
             continue;
         }
-        edgeQueue.enqueue(this.allNeighborsIndex[nextNode][i][nodeEdgeMap.get({a: nextNode, b: i})]);
+        edgeQueue.enqueue({source: i,
+            edge: this.allNeighborsIndex[nextNode][i][nodeEdgeMap.get({a: nextNode, b: i})]});
     }
     var newEdges = new Array();
 
     while(!edgeQueue.isEmpty())
     {
-        var edge = edgeQueue.dequeue();
-        var prevNode = nextNode;
-        nextNode = edge.source == nextNode ? edge.target : edge.source;
+        var queueObject = edgeQueue.dequeue();
+        var edge = queueObject.edge;
+        nextNode = queueObject.source;
         if(!processedNodes.includes(nextNode))
         {
             processedNodes.push(nextNode);
             newEdges.push(edge);
+            edge.marked = true;
             for(i = 0; i < this.allNeighborsCount[nextNode] + 1; i++)
             {
                 if(i == nextNode)
                 {
                     continue;
                 }
-                edgeQueue.enqueue(this.allNeighborsIndex[nextNode][i][nodeEdgeMap.get({a: nextNode, b: i})]);
+                var putEdge = this.allNeighborsIndex[nextNode][i][nodeEdgeMap.get({a: nextNode, b: i})];
+                if(!putEdge.marked)
+                {
+                    edgeQueue.enqueue({source: i, edge: putEdge});
+                }
             }
         }        
     }
-    this.clear();
-    this.read({nodes: nodeArray, edges: newEdges});
+
+    var totalEdges = this.edgesArray.length;
+    for(i = 0; i < totalEdges; i++)
+    {
+        this.dropEdge(this.edgesArray[0].id);
+    }
+    this.read({edges: newEdges});
 }
 
 buckets.Queue.prototype.maxSize = 0;

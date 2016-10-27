@@ -17,10 +17,12 @@ s = new sigma({
   }
 });
 
+var nodeNo = 50;
+
 var nodes = buckets.Dictionary();
-while(nodes.size() < 100)
+while(nodes.size() < nodeNo)
 {
-    var point = new Point2d(Math.round(Math.random() * 100) , Math.round(Math.random() * 100));
+    var point = new Point2d(Math.round(Math.random() * nodeNo) , Math.round(Math.random() * nodeNo));
     if(!nodes.containsKey(point))
     {
         var node = new Node(nodes.size(), point, "#f00");
@@ -39,7 +41,7 @@ var nodeEdgeMap = new buckets.Dictionary(function(object)
 });
 for(i = 0; i < 99; i++)
 {
-  for(j = i + 1; j < 100; j++)
+  for(j = i + 1; j < nodeNo; j++)
   {
     var lenX = nodeArray[i].x - nodeArray[j].x;
     var lenY = nodeArray[i].y - nodeArray[j].y;
@@ -51,6 +53,7 @@ for(i = 0; i < 99; i++)
 
 
 var locations = new Array();
+
 s.bind('clickNode', function(e)
 {
   switch(locations.length)
