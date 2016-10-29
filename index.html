@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
+ <meta charset="utf-8">
 <html>
 <head>
   <title>Basic sigma.js example</title>
@@ -7,27 +8,44 @@
     body {
       margin: 0;
     }
-    #all{
-      position: absolute;
-      width: 100%;
+    #containerContaine{
+      width: 80%;
       height: 100%;
+      float: right;
     }
     #container {
       position: absolute;
       width: 100%;
       height: 100%;
-      background: #24272b;
+      background: #121315;
 
     }
     #info{
-      position: relative;
+      width: 20%;
+      height: 100%;
+      background: #24272b;
+      position: absolute;
     }
 
   </style>
 </head>
 <body>
-    <div id="container"></div>
-    <div id="info"><canvas id="instructions" width="800" height="200"></canvas></div>
+    <div id="containerContaine">
+      <div id="container">
+      </div>
+    </div>
+    <div id="info">
+      <center>
+        <img src="images/logo500.gif" width="50%" height="50%">
+        
+        <p>YTÜ Bilgisayar Mühendisliği</p> 
+        <p>Yapay Zeki Dersi 1. Ödevi</p>
+        <p>
+          <div id="interaction-info"></div>
+          
+        </p>
+      </center>
+    </div>
   
   
   <script src="./scripts/libs/sigma.min.js"></script>

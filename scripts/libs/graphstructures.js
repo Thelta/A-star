@@ -102,7 +102,7 @@ function changeWeightRandomly()
     }
 }
 
-function primsAlgorithm(startPoint, nodeEdgeMap)
+function primsAlgorithm(startPoint)
 {
     var nextNode = startPoint;
     var processedNodes = [startPoint];
@@ -159,7 +159,7 @@ function primsAlgorithm(startPoint, nodeEdgeMap)
 
 function aStar(startNode, endNode)
 {
-    var nextNode = startNode;
+    var t0 = performance.now();
     var pathQueue = new buckets.PriorityQueue(function(a, b)
     {
         return b.fcost - a.fcost;
@@ -168,6 +168,8 @@ function aStar(startNode, endNode)
     pathQueue.totalDequeue = 0;
     pathQueue.informerDequeue = informerDequeue;
     pathQueue.informerEnqueue = informerEnqueue;
+
+    var nextNode = startNode;
     for(var i in this.allNeighborsIndex[nextNode])
     {
         i = parseInt(i, 10);
@@ -190,7 +192,7 @@ function aStar(startNode, endNode)
             if(queueObject.nodes.includes(i))
             {
                 continue;
-            }
+            }   
             var newNodeArray = queueObject.nodes.slice();
             newNodeArray.push(i);
             pathQueue.informerEnqueue({
@@ -204,10 +206,14 @@ function aStar(startNode, endNode)
         }
     }
 
+    var t1 = performance.now();
+
     for(i = 0; i < queueObject.nodes.length - 1; i++)
     {
         this.nodes(queueObject.nodes[i]).color = "#59f442";
         this.getEdge(queueObject.nodes[i], queueObject.nodes[i + 1]).color = "#59f442";
     }
+
+    return {time: t1 - t0, maxSize: pathQueue.maxSize, totalDequeue: pathQueue.totalDequeue};
 }
 

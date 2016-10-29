@@ -25,10 +25,10 @@ s = new sigma({
 
 var nodeNo = 100;
 
-var c = document.getElementById("instructions");
-var ctx = c.getContext("2d");
-ctx.font = "60px Arial";
-ctx.fillText("Select starting node",10,50);
+var newParagraph = document.createElement('strong');
+newParagraph.setAttribute("style", "color: red;");
+newParagraph.textContent = "Please click to start node";
+document.getElementById("interaction-info").appendChild(newParagraph);
 
 var nodes = buckets.Dictionary();
 while(nodes.size() < nodeNo)
@@ -46,15 +46,10 @@ s.refresh();
 
 var nodeArray = nodes.values();
 var edges = new Array();
-var nodeEdgeMap = new buckets.Dictionary(function(object)
-{
-  return object.a > object.b ? object.b + " " + object.a : object.a + " " + object.b; 
-});
 for(i = 0; i < 99; i++)
 {
   for(j = i + 1; j < nodeNo; j++)
   {
-    nodeEdgeMap.set({a: i, b: j}, edges.length);
     edges.push(new Edge(edges.length, i, j, s.graph.getWeight(i, j)));
   }
 }
@@ -70,24 +65,35 @@ s.bind('clickNode', function(e)
     {
       locations.push(e.data.node);
       e.data.node.color = "#4286f4";
-      ctx.clearRect(0, 0, c.width, c.height);
-      ctx.fillText("Select destination node", 10, 50);
+      newParagraph.textContent = "Please click to end node";
       s.refresh()
     }break;
     case 1:
     {
-      ctx.clearRect(0, 0, c.width, c.height);
+      document.getElementById("interaction-info").removeChild(newParagraph);
       s.graph.read({edges: edges});
       locations.push(e.data.node);
       e.data.node.color = "#59f442";
 
-      s.graph.primsAlgorithm(e.data.node.id, nodeEdgeMap);
+      s.graph.primsAlgorithm(e.data.node.id);
 
       s.graph.createRandomEdges();
 
       s.graph.changeWeightRandomly();
-      s.graph.aStar(locations[0].id, e.data.node.id);
+
+
+      var infoObject = s.graph.aStar(locations[0].id, e.data.node.id);
       s.refresh();
+
+      var maxSizeDocument = document.createElement("p");
+      maxSizeDocument.textContent = "Kuyruğun maksimimum büyüklüğü " + infoObject.maxSize;
+      var totalDequeueDocument = document.createElement("p");
+      totalDequeueDocument.textContent = "Kuyruktan çekilen eleman sayısı " + infoObject.totalDequeue;
+      var timeDocument = document.createElement("p");
+      timeDocument.textContent = "A*'ın çalışma süresi " + infoObject.time + " saniye";
+      document.getElementById("interaction-info").appendChild(maxSizeDocument);
+      document.getElementById("interaction-info").appendChild(totalDequeueDocument);
+      document.getElementById("interaction-info").appendChild(timeDocument);
     }break;
   }
 }); 
