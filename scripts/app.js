@@ -27,7 +27,7 @@ var nodeNo = 100;
 
 var newParagraph = document.createElement('strong');
 newParagraph.setAttribute("style", "color: red;");
-newParagraph.textContent = "Please click to start node";
+newParagraph.textContent = "Başlangıç node'unu seçin.";
 document.getElementById("interaction-info").appendChild(newParagraph);
 
 var nodes = buckets.Dictionary();
@@ -65,7 +65,7 @@ s.bind('clickNode', function(e)
     {
       locations.push(e.data.node);
       e.data.node.color = "#4286f4";
-      newParagraph.textContent = "Please click to end node";
+      newParagraph.textContent = "Gidilecek node'u seçin";
       s.refresh()
     }break;
     case 1:
