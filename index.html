@@ -2,24 +2,37 @@
 <html>
 <head>
   <title>Basic sigma.js example</title>
+  <script src="./scripts/libs/buckets.min.js"></script>
   <style type="text/css">
     body {
       margin: 0;
+    }
+    #all{
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
     #container {
       position: absolute;
       width: 100%;
       height: 100%;
+      background: #24272b;
+
     }
+    #info{
+      position: relative;
+    }
+
   </style>
 </head>
-<body bgcolor="#24272b">
-  <div id="container"></div>
-  <script src="./scripts/libs/buckets.min.js"></script>
+<body>
+    <div id="container"></div>
+    <div id="info"><canvas id="instructions" width="800" height="200"></canvas></div>
+  
+  
   <script src="./scripts/libs/sigma.min.js"></script>
   <script src="./scripts/libs/plugins/sigma.renderers.edgeLabels.min.js"></script>
   <script src="./scripts/libs/graphstructures.js"></script>
   <script src="./scripts/app.js">  </script>
-  <a id="downloadAnchorElem" style="display:none"></a>
-</body>
+  </body>
 </html>

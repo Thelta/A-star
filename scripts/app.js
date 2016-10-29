@@ -1,4 +1,9 @@
 sigma.classes.graph.addMethod("primsAlgorithm", primsAlgorithm);
+sigma.classes.graph.addMethod("getWeight", getWeight);
+sigma.classes.graph.addMethod("createRandomEdges", createRandomEdges);
+sigma.classes.graph.addMethod("changeWeightRandomly", changeWeightRandomly);
+sigma.classes.graph.addMethod("getEdge", getEdge);
+sigma.classes.graph.addMethod("aStar", aStar);
 
 s = new sigma({
   graph: {
@@ -13,11 +18,17 @@ s = new sigma({
     type: 'canvas'
   },
   settings: {
-    labelThreshold: 0
+    labelThreshold: 0,
+    edgeColor: "default"   
   }
 });
 
-var nodeNo = 50;
+var nodeNo = 100;
+
+var c = document.getElementById("instructions");
+var ctx = c.getContext("2d");
+ctx.font = "60px Arial";
+ctx.fillText("Select starting node",10,50);
 
 var nodes = buckets.Dictionary();
 while(nodes.size() < nodeNo)
@@ -43,11 +54,8 @@ for(i = 0; i < 99; i++)
 {
   for(j = i + 1; j < nodeNo; j++)
   {
-    var lenX = nodeArray[i].x - nodeArray[j].x;
-    var lenY = nodeArray[i].y - nodeArray[j].y;
-    var weight = Math.sqrt(lenY * lenY + lenX * lenX);
     nodeEdgeMap.set({a: i, b: j}, edges.length);
-    edges.push(new Edge(edges.length, i, j, weight));
+    edges.push(new Edge(edges.length, i, j, s.graph.getWeight(i, j)));
   }
 }
 
@@ -62,16 +70,26 @@ s.bind('clickNode', function(e)
     {
       locations.push(e.data.node);
       e.data.node.color = "#4286f4";
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.fillText("Select destination node", 10, 50);
       s.refresh()
     }break;
     case 1:
     {
+      ctx.clearRect(0, 0, c.width, c.height);
       s.graph.read({edges: edges});
       locations.push(e.data.node);
       e.data.node.color = "#59f442";
 
       s.graph.primsAlgorithm(e.data.node.id, nodeEdgeMap);
+
+      s.graph.createRandomEdges();
+
+      s.graph.changeWeightRandomly();
+      s.graph.aStar(locations[0].id, e.data.node.id);
       s.refresh();
     }break;
   }
 }); 
+
+
