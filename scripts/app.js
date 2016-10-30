@@ -96,6 +96,4 @@ s.bind('clickNode', function(e)
       document.getElementById("interaction-info").appendChild(timeDocument);
     }break;
   }
-}); 
-
-
+});
