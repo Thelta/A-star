@@ -1,3 +1,4 @@
+//nodeların durduğu yeri belirtmektedir.
 class Point2d
 {
     constructor(x, y)
@@ -39,6 +40,7 @@ class Edge
     }
 }
 
+//Kuyruğa sokma işlemi ile birlikte kuyruğun en büyük halini hesaplar.
 function informerEnqueue(object)
 {
     if(this.maxSize < this.size())
@@ -49,19 +51,21 @@ function informerEnqueue(object)
     return this.enqueue(object);
 };
 
+//Kuyruktan çıkartma işlemiyle beraber toplam kaç tane çıkarma işlemi yaptığını hesaplar. 
  function informerDequeue()
 {
     this.totalDequeue += 1;
     return this.dequeue();
 };
 
-
+//iki node belirterek ikisinin edge'ini döndürür.
 function getEdge(node1, node2)
 {
     for(var edgeId in this.allNeighborsIndex[node1][node2]);
     return this.allNeighborsIndex[node1][node2][edgeId];
 }
 
+//İki node arasındaki edgein ağırlığını hesaplar
 function getWeight(startNodeId, endNodeId)
 {
     var lenX = this.nodes(startNodeId).x - this.nodes(endNodeId).x;
@@ -69,18 +73,20 @@ function getWeight(startNodeId, endNodeId)
     return Math.sqrt(lenY * lenY + lenX * lenX);
 }
 
+//Rastgele edge yaratır.
 function createRandomEdges()
 {
   var newEdges = new Array();
+  
+  //Yeni edgelerin alabilecek minimum id'yi hesaplar.
+  var minId;  
+  for(minId in this.edgesIndex);
+  minId++;
+  
   while(newEdges.length < nodeNo - 1)
   {
     var startNode = Math.round(100 * Math.random() - 0.5) ;
     var endNode = Math.round(100 * Math.random() - 0.5);
-
-    var minId;
-
-    for(minId in this.edgesIndex);
-    minId++;
 
     if(startNode != endNode)
     {
@@ -91,6 +97,7 @@ function createRandomEdges()
   this.read({edges: newEdges});
 }
 
+//Edgelerin ağırlıklarını değiştirir.
 function changeWeightRandomly()
 {
     for(i = 0; i < this.edgesArray.length; i++)
@@ -102,16 +109,18 @@ function changeWeightRandomly()
     }
 }
 
+//MST hesaplama için kullanılan prim algoritması fonksiyonu
 function primsAlgorithm(startPoint)
 {
     var nextNode = startPoint;
-    var processedNodes = [startPoint];
+    var processedNodes = [startPoint]; //Kullanılmış nodeların saklandığı array.
 
-    var edgeQueue = new buckets.PriorityQueue(function(a,b)
+    var edgeQueue = new buckets.PriorityQueue(function(a,b) //Edgelerin koyulacağı queue
     {
         return b.edge.weight - a.edge.weight;
     });
 
+    //nextNode'un bütün edgelerini queue'e ekler.
     for(i = 0; i < this.allNeighborsCount[nextNode] + 1; i++)
     {
         if(i == nextNode)
@@ -128,12 +137,12 @@ function primsAlgorithm(startPoint)
         var queueObject = edgeQueue.dequeue();
         var edge = queueObject.edge;
         nextNode = queueObject.source;
-        if(!processedNodes.includes(nextNode))
+        if(!processedNodes.includes(nextNode)) 
         {
             processedNodes.push(nextNode);
             newEdges.push(edge);
             edge.marked = true;
-            for(i = 0; i < this.allNeighborsCount[nextNode] + 1; i++)
+            for(i = 0; i < this.allNeighborsCount[nextNode] + 1; i++)   //Node'un kullanılmamış edgelerini queue'ya koy
             {
                 if(i == nextNode)
                 {
@@ -148,19 +157,19 @@ function primsAlgorithm(startPoint)
         }        
     }
 
+    //ui'ya yeni edgeleri yükle.
     var totalEdges = this.edgesArray.length;
     for(i = 0; i < totalEdges; i++)
     {
         this.dropEdge(this.edgesArray[0].id);
     }
-
     this.read({edges: newEdges});
 }
 
 function aStar(startNode, endNode)
 {
     var t0 = performance.now();
-    var pathQueue = new buckets.PriorityQueue(function(a, b)
+    var pathQueue = new buckets.PriorityQueue(function(a, b)    //pathlerin saklanacağı queue
     {
         return b.fcost - a.fcost;
     });
@@ -170,7 +179,7 @@ function aStar(startNode, endNode)
     pathQueue.informerEnqueue = informerEnqueue;
 
     var nextNode = startNode;
-    for(var i in this.allNeighborsIndex[nextNode])
+    for(var i in this.allNeighborsIndex[nextNode])  //node'un komşular olan bütün yolları ve o yolların fcostunu hesaplar.
     {
         i = parseInt(i, 10);
         pathQueue.informerEnqueue({
@@ -185,7 +194,7 @@ function aStar(startNode, endNode)
     {
         queueObject = pathQueue.informerDequeue();
         nextNode = queueObject.nodes[queueObject.nodes.length - 1];
-        for(var i in this.allNeighborsIndex[nextNode])
+        for(var i in this.allNeighborsIndex[nextNode])  //node'un komşular olan bütün yolları ve o yolların fcostunu hesaplar.
         {
             i = parseInt(i, 10);
             

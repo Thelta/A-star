@@ -1,3 +1,4 @@
+//graph ile alakalı fonksiyonlar sigma objesine eklendi.
 sigma.classes.graph.addMethod("primsAlgorithm", primsAlgorithm);
 sigma.classes.graph.addMethod("getWeight", getWeight);
 sigma.classes.graph.addMethod("createRandomEdges", createRandomEdges);
@@ -5,6 +6,7 @@ sigma.classes.graph.addMethod("changeWeightRandomly", changeWeightRandomly);
 sigma.classes.graph.addMethod("getEdge", getEdge);
 sigma.classes.graph.addMethod("aStar", aStar);
 
+//Graphı gösterecek olan s objesi oluşturuldu.
 s = new sigma({
   graph: {
       nodes: [],
@@ -30,6 +32,7 @@ newParagraph.setAttribute("style", "color: red;");
 newParagraph.textContent = "Başlangıç node'unu seçin.";
 document.getElementById("interaction-info").appendChild(newParagraph);
 
+//rastgele nodelar oluşturuldu.
 var nodes = buckets.Dictionary();
 while(nodes.size() < nodeNo)
 {
@@ -44,6 +47,7 @@ while(nodes.size() < nodeNo)
 s.graph.read({nodes: nodes.values()});
 s.refresh();
 
+//Nodelara oluşturulabilecek bütün edgeler oluşturuldu.
 var nodeArray = nodes.values();
 var edges = new Array();
 for(i = 0; i < 99; i++)
@@ -55,20 +59,20 @@ for(i = 0; i < 99; i++)
 }
 
 
-var locations = new Array();
+var locations = new Array(); //Tıklanılan nodelar tututluyor
 
 s.bind('clickNode', function(e)
 {
   switch(locations.length)
   {
-    case 0:
+    case 0: //Başlangıç node'u seçildi
     {
       locations.push(e.data.node);
       e.data.node.color = "#4286f4";
       newParagraph.textContent = "Gidilecek node'u seçin";
       s.refresh()
     }break;
-    case 1:
+    case 1: //Gidilecek node seçildi
     {
       document.getElementById("interaction-info").removeChild(newParagraph);
       s.graph.read({edges: edges});
@@ -82,7 +86,7 @@ s.bind('clickNode', function(e)
       s.graph.changeWeightRandomly();
 
 
-      var infoObject = s.graph.aStar(locations[0].id, e.data.node.id);
+      var infoObject = s.graph.aStar(locations[0].id, e.data.node.id);  //aStar çalıştırıldı ve çalışmayla ilgili bilgiler alındı
       s.refresh();
 
       var maxSizeDocument = document.createElement("p");
